@@ -2,16 +2,18 @@
 
 import time
 import sys
+import os.path
+import getopt
+import re
+
 try:
     import pygame
 except ImportError:
     print("You need to have pygame in python path available, to run program. Please install it, and try again")
     sys.exit(2)
 
-import getopt
-import re
-
 class Song():
+
     song = []
 
     def add(self, data):
@@ -39,20 +41,18 @@ class Song():
         return None
         
 class Pattern():
+    
     patterns = {}
     
     def add(self, name, data):
         self.patterns[name] = data
 
 class Metronome():
-    
-    patterns = {}
-    pattern = Pattern()
-    song = Song()
-    # global constants
-    FREQ = 44100   # same as audio CD
-    BITSIZE = -16  # unsigned 16 bit
-    CHANNELS = 2   # 1 == mono, 2 == stereo
+
+    VERSION = "0.2"
+    FREQ = 44100 # same as audio CD
+    BITSIZE = -16 # unsigned 16 bit
+    CHANNELS = 2 # 1 == mono, 2 == stereo
     BUFFER = 1024  # audio buffer size in no. of samples
     DURATION = 0.005 # tick length
     live_bpm = 100
@@ -61,18 +61,28 @@ class Metronome():
     live_accent = False
     verbose = False
     maxtime = 0
-    high_name = 'high.wav'
-    low_name = 'low.wav'
+    high_name = 'sounds/3520-1760/high.wav'
+    low_name = 'sounds/3520-1760/low.wav'
     sound_high = None
     sound_low = None
     report = "BPM: %s - Metrum %s/%s - Accent: %s - Repeats: %s"
     
+    pattern = Pattern()
+    song = Song()
+    
     def main(self):
+        if not os.path.exists(os.path.join(sys.path[0], self.high_name)):
+            print("File %s not found!" % self.high_name)
+            sys.exit(2)
+        if not os.path.exists(os.path.join(sys.path[0], self.low_name)):
+            print("File %s not found!" % self.low_name)
+            sys.exit(2)
+
         try:
             pygame.mixer.init(self.FREQ, self.BITSIZE, self.CHANNELS, self.BUFFER)
             self.maxtime = int(self.DURATION) * 1000
-            self.sound_high = pygame.mixer.Sound(self.high_name)
-            self.sound_low = pygame.mixer.Sound(self.low_name)
+            self.sound_high = pygame.mixer.Sound(os.path.join(sys.path[0], self.high_name))
+            self.sound_low = pygame.mixer.Sound(os.path.join(sys.path[0], self.low_name))
         
         except pygame.error, exc:
             print >>sys.stderr, "Could not initialize sound system: %s" % exc
@@ -138,6 +148,7 @@ class Metronome():
             sys.exit(2)
         #pattern search
         pattern_pattern = re.compile(r'''!([a-zA-Z0-9]+)\s*=\s*\[([0-9\,\s]+)\]''',re.I|re.M|re.S)
+        pattern_exists = False
         
         data_file = f.read()
         matches = re.findall(pattern_pattern, data_file)
@@ -152,9 +163,7 @@ class Metronome():
 
         #song load
         f.seek(0)                     
-        count = 0
-        for line in f:
-            count += 1
+        for count, line in enumerate(f, start=1):
             line = line.strip()
             if line.startswith('#') or len(line) == 0:
                 #skipping empty lines and comments
