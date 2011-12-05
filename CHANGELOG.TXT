@@ -4,6 +4,7 @@
 * moved sound files to separate directory
 * added 2 more sound frequencies, to use them, you need to change path inside Metronome class
 * added checking if sound files are available
+* added license information
 
 2011-12-04: v0.1
 ----------------
