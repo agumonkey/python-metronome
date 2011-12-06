@@ -1,3 +1,9 @@
+2011-12-06: v0.3
+----------------
+* added manual in README.TXT
+* cleaned up some code
+* cleaned up some example files
+
 2011-12-05: v0.2
 ----------------
 * changed song loading main loop to be more pythonic (enumerate)

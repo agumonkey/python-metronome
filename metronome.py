@@ -64,7 +64,7 @@ class Pattern():
 
 class Metronome():
 
-    VERSION = "0.2"
+    VERSION = "0.3"
     FREQ = 44100 # same as audio CD
     BITSIZE = -16 # unsigned 16 bit
     CHANNELS = 2 # 1 == mono, 2 == stereo
@@ -222,6 +222,8 @@ class Metronome():
                 if error:
                     print("Line %s: Error: %s" % (count, error))
                     sys.exit(2)
+            else:
+                print("Line %s: Error: %s" % (count, "Something is wrong in this line. It won't be played.'"))
         return self.song.song
 
 def usage():
