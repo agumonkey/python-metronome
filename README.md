@@ -38,7 +38,7 @@ For example:
 
 will play 6/8 time signature, 125 BPM, it will be repeated 3 times with accent on first note in bar.
 
-        65,3,4,1,0:
+        65,3,4,1,0
 
 will play 3/4 time signature, 65 BPM, it will be played only once, and without accent on first note in bar.
 
