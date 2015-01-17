@@ -105,8 +105,8 @@ class Metronome():
             self.sound_high = pygame.mixer.Sound(os.path.join(sys.path[0], self.high_name))
             self.sound_low = pygame.mixer.Sound(os.path.join(sys.path[0], self.low_name))
 
-        except pygame.error, exc:
-            print >>sys.stderr, "Could not initialize sound system: %s" % exc
+        except pygame.error as exc:
+            print("Could not initialize sound system: %s" % exc, file=sys.stderr)
 
     def play_file(self, filename):
         """
@@ -164,8 +164,8 @@ class Metronome():
 
         try:
             f = open(fname)
-        except IOError, e:
-            print "Problem loading file: %s" % e
+        except IOError as e:
+            print("Problem loading file: %s" % e)
             sys.exit(2)
         #pattern search
         pattern_pattern = re.compile(r'''!([a-zA-Z0-9]+)\s*=\s*\[([0-9\,\s]+)\]''', re.I | re.M | re.S)
@@ -260,9 +260,9 @@ if __name__ == "__main__":
                                    "hf:b:t:n:av",
                                    ["help", "file=", "bpm=", "ticks=",
                                     "note=", "accent", "verbose"])
-    except getopt.GetoptError, err:
+    except getopt.GetoptError as err:
         usage()
-        print str(err)
+        print(str(err))
         sys.exit(2)
     for o, a in opts:
         if o in ("-f", "--file"):
@@ -274,26 +274,26 @@ if __name__ == "__main__":
         elif o in ("-b", "--bpm"):
             try:
                 metronome.live_bpm = int(a)
-            except ValueError, e:
-                print "Integer required: %s" % e
+            except ValueError as e:
+                print("Integer required: %s" % e)
                 sys.exit(2)
             if metronome.live_bpm < 30 or metronome.live_bpm > 250:
-                print "BPM should be between 30 and 250."
+                print("BPM should be between 30 and 250.")
                 sys.exit(2)
         elif o in ("-t", "--ticks"):
             try:
                 metronome.live_ticks = int(a)
-            except ValueError, e:
-                print "Integer required: %s" % e
+            except ValueError as e:
+                print("Integer required: %s" % e)
                 sys.exit(2)
         elif o in ("-n", "--note"):
             try:
                 metronome.live_tpb = int(a)
-            except ValueError, e:
-                print "Integer required: %s" % e
+            except ValueError as e:
+                print("Integer required: %s" % e)
                 sys.exit(2)
             if metronome.live_note != 2 and metronome.live_note != 4 and metronome.live_note != 8 and metronome.live_note != 16:
-                print "Note can be only 2, 4, 8, 16!"
+                print("Note can be only 2, 4, 8, 16!")
                 sys.exit(2)
         elif o in ("-a", "--accent"):
             metronome.live_accent = True
